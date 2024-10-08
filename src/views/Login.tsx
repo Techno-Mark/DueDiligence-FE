@@ -5,7 +5,7 @@ import { useState } from "react";
 
 // Next Imports
 import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 // MUI Imports
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -13,14 +13,9 @@ import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
-import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Divider from "@mui/material/Divider";
-import Alert from "@mui/material/Alert";
 
 // Third-party Imports
-
 import { Controller, useForm } from "react-hook-form";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { object, minLength, string, email } from "valibot";
@@ -32,11 +27,8 @@ import classnames from "classnames";
 import type { SystemMode } from "@core/types";
 
 // Component Imports
-import Logo from "@components/layout/shared/Logo";
 import CustomTextField from "@core/components/mui/TextField";
 
-// Config Imports
-import themeConfig from "@configs/themeConfig";
 
 // Hook Imports
 import { useImageVariant } from "@core/hooks/useImageVariant";
@@ -125,11 +117,11 @@ const Login = ({ mode }: { mode: SystemMode }) => {
 
   // Hooks
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { settings } = useSettings();
   const theme = useTheme();
   const hidden = useMediaQuery(theme.breakpoints.down("md"));
   const authBackground = useImageVariant(mode, lightImg, darkImg);
+  const { lang: locale } = useParams()
 
   const {
     control,
@@ -238,7 +230,6 @@ const Login = ({ mode }: { mode: SystemMode }) => {
               <Typography>Please sign-in to your account</Typography>
             </div>
 
-
             <form
               noValidate
               autoComplete="off"
@@ -311,6 +302,16 @@ const Login = ({ mode }: { mode: SystemMode }) => {
                   />
                 )}
               />
+              <div className="flex justify-between items-center gap-x-3 gap-y-1 flex-wrap">
+                <Typography
+                  className="text-end"
+                  color="primary"
+                  component={Link}
+                  href={"/forgot-password"}
+                >
+                  Forgot password?
+                </Typography>
+              </div>
               <Button
                 fullWidth
                 variant="contained"

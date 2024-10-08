@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/libs/auth";
 import { getServerMode } from "@core/utils/serverHelpers";
-import OtpVerification from "@views/OtpVerification";
+import TwoSteps from "@/views/TwoSteps";
 
 export const metadata: Metadata = {
   title: "OTP Verification",
@@ -25,7 +25,7 @@ const OtpPage = async () => {
 
   const mode = getServerMode();
 
-  return <OtpVerification mode={mode} />;
+  return <TwoSteps />;
 };
 
 export default OtpPage;
