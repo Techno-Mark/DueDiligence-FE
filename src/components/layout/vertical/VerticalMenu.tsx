@@ -114,6 +114,23 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         >
           Register Event pop-up
         </MenuItem>
+        <SubMenu
+          label={"Roles & Permissions"}
+          icon={<i className="tabler-lock" />}
+        >
+          <MenuItem
+            href={`/roles`}
+            icon={<i className="tabler-user-cog"></i>}
+          >
+            Roles
+          </MenuItem>
+          <MenuItem
+            href={`/permissions`}
+            icon={<i className="tabler-accessible"></i>}
+          >
+            Permissions
+          </MenuItem>
+        </SubMenu>
         {/* <MenuItem href='/content-management/pages' icon={<i className='tabler-brand-pagekit' />}>
           Pages
         </MenuItem>

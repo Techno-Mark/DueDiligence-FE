@@ -4,10 +4,10 @@
   font-size: 0.8125rem;
   white-space: nowrap;
 
-  [align='right'] > * {
+  [align="right"] > * {
     text-align: end;
   }
-  [align='center'] > * {
+  [align="center"] > * {
     text-align: center;
   }
 
@@ -28,11 +28,11 @@
         padding-inline: 1rem;
       }
       &:first-of-type {
-        &:not(:has(input[type='checkbox'])) {
+        &:not(:has(input[type="checkbox"])) {
           padding-block: 0.5rem;
           padding-inline: 1.5rem 1rem;
         }
-        &:has(input[type='checkbox']) {
+        &:has(input[type="checkbox"]) {
           padding-inline-start: 0.9375rem;
         }
       }
@@ -56,11 +56,12 @@
         padding-inline: 1rem;
       }
       &:first-of-type {
-        &:not(:has(input[type='checkbox'])) {
+        &:not(:has(input[type="checkbox"])) {
           padding-block: 0.5rem;
           padding-inline: 1.5rem 1rem;
         }
-        &:has(input[type='checkbox']) {
+        &:has(input[type="checkbox"]) {
+          inline-size: 51px;
           padding-inline-start: 0.9375rem;
         }
       }
