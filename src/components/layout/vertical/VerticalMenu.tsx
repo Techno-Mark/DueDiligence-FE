@@ -1,5 +1,7 @@
 "use client";
 
+import { useSession } from "next-auth/react"; // Import useSession
+
 // MUI Imports
 import { useTheme } from "@mui/material/styles";
 
@@ -11,7 +13,6 @@ import type { VerticalMenuContextProps } from "@menu/components/vertical-menu/Me
 
 // Component Imports
 import { Menu, MenuItem, SubMenu } from "@menu/vertical-menu";
-import CustomChip from "@core/components/mui/Chip";
 
 // Hook Imports
 import { useSettings } from "@core/hooks/useSettings";
@@ -51,6 +52,10 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
   const verticalNavOptions = useVerticalNav();
   const { settings } = useSettings();
   const { isBreakpointReached } = useVerticalNav();
+
+  // Get session data
+  const { data: session } = useSession();
+  const userRole = session?.user?.role; // Access user role from session
 
   // Vars
   const { transitionDuration } = verticalNavOptions;
@@ -114,23 +119,25 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         >
           Register Event pop-up
         </MenuItem>
-        <SubMenu
-          label={"Roles & Permissions"}
-          icon={<i className="tabler-lock" />}
-        >
-          <MenuItem
-            href={`/roles`}
-            icon={<i className="tabler-user-cog"></i>}
+        {userRole !== "client" && ( // Check if the user is NOT a client
+          <SubMenu
+            label={"Roles & Permissions"}
+            icon={<i className="tabler-lock" />}
           >
-            Roles
-          </MenuItem>
-          <MenuItem
-            href={`/permissions`}
-            icon={<i className="tabler-accessible"></i>}
-          >
-            Permissions
-          </MenuItem>
-        </SubMenu>
+            <MenuItem
+              href={`/apps/roles`}
+              icon={<i className="tabler-user-cog"></i>}
+            >
+              Roles
+            </MenuItem>
+            <MenuItem
+              href={`/permissions`}
+              icon={<i className="tabler-accessible"></i>}
+            >
+              Permissions
+            </MenuItem>
+          </SubMenu>
+        )}
         {/* <MenuItem href='/content-management/pages' icon={<i className='tabler-brand-pagekit' />}>
           Pages
         </MenuItem>

@@ -139,6 +139,7 @@ export const authOptions: NextAuthOptions = {
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJFbWFpbCI6ImZ3X3N1cGVyYWRtaW5AeW9wbWFpbC5jb20iLCJpYXQiOjE3MjgyODU5OTksImV4cCI6MTcyODg5MDc5OX0.OFFeJx0BO8WLVhS6NLnRcfPcxqHCPxRAyg4fbMusq6o",
               tokenExpiry: "2024-10-08T07:26:39.000Z",
               refreshTokenExpiry: "2024-10-14T07:26:39.000Z",
+              role: user.role,
             };
           } else {
             throw new Error("Invalid OTP");

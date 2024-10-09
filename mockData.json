@@ -3,7 +3,14 @@
         {
             "email": "test@example.com",
             "password": "password123",
-            "otp": "123456"
+            "otp": "123456",
+            "role": "admin"
+        },
+        {
+            "email": "client@example.com",
+            "password": "password321",
+            "otp": "654321",
+            "role": "client"
         }
     ]
 }

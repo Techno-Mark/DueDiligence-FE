@@ -6,6 +6,7 @@ export type ExtendedUser = DefaultSession["user"] & {
   email?: string | null;
   image?: string | null;
   token: string;
+  role?: string;
   refresh_token: string;
   expires_at: string;
   CompanyId: number;

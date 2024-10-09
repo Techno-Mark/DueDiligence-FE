@@ -1,7 +1,18 @@
 import { UsersType } from "@/types/apps/userTypes";
-import RoleList from "../../views/apps/roles/page";
+import { Grid, Typography } from "@mui/material";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/libs/auth";
+import { redirect } from "next/navigation";
+import RoleListTable from "./RolesTable";
 
 const RolesApp = async () => {
+  const session = await getServerSession(authOptions);
+
+  if (!session || session.user.role !== "admin") {
+    redirect("/not-found"); 
+    return null; 
+  }
+
   // Vars
   const data: UsersType[] = [
     {
@@ -246,7 +257,21 @@ const RolesApp = async () => {
     },
   ];
 
-  return <RoleList userData={data} />;
+  return (
+    <Grid item xs={12} spacing={6}>
+      <Typography variant="h4" className="mbe-1">
+        Roles List
+      </Typography>
+      <Typography paddingBottom={5}>
+        A role provided access to predefined menus and features so that
+        depending on assigned role an administrator can have access to what he
+        need
+      </Typography>
+      <Grid item xs={12} >
+        <RoleListTable tableData={data} />
+      </Grid>
+    </Grid>
+  );
 };
 
 export default RolesApp;

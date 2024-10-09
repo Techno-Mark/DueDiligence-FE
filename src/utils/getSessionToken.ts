@@ -14,7 +14,6 @@ const getSessionToken = async () => {
     //   res.status(401).json({ message: "You must be logged in." })
     return;
   } else {
-    console.log("asddasdas");
     window.location.href ='/home'
   }
 };
