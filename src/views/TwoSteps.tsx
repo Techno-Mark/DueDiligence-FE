@@ -124,7 +124,7 @@ const TwoSteps = () => {
       } else if (res?.ok) {
         sessionStorage.removeItem("tempEmail"); // Clear the temporary email
         toast.success("Login successful");
-        router.push("/home");
+        router.push("/dashboard");
       } else {
         throw new Error("Unexpected response from server");
       }

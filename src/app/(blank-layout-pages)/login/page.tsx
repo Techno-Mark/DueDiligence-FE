@@ -19,7 +19,7 @@ const LoginPage = async () => {
     if (session.user.requiresOtp) {
       redirect("/otp");
     } else {
-      redirect("/home");
+      redirect("/dashboard");
     }
   }
 
