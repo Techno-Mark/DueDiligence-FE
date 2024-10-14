@@ -55,7 +55,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
 
   // Get session data
   const { data: session } = useSession();
-  const userRole = session?.user?.role; // Access user role from session
+  const userRole = session?.user?.role;
 
   // Vars
   const { transitionDuration } = verticalNavOptions;
@@ -64,7 +64,6 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
 
   return (
     // eslint-disable-next-line lines-around-comment
-    /* Custom scrollbar instead of browser scroll, remove if you want browser scroll only */
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
@@ -76,7 +75,6 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
             onScrollY: (container) => scrollMenu(container, true),
           })}
     >
-      {/* Incase you also want to scroll NavHeader to scroll with Vertical Menu, remove NavHeader from above and paste it below this comment */}
       {/* Vertical Menu */}
       <Menu
         popoutMenuOffset={{ mainAxis: 23 }}
@@ -92,95 +90,39 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        <MenuItem href="/home" icon={<i className="tabler-clipboard-data" />}>
-          List your brand
-        </MenuItem>
         <MenuItem
-          href="/investor"
+          href="/dashboard"
           icon={<i className="tabler-clipboard-data" />}
         >
-          Investor
+          Dashboard
         </MenuItem>
         <MenuItem
-          href="/contact-us"
+          href="/document"
           icon={<i className="tabler-clipboard-data" />}
         >
-          Contact Us
+          Document Management
         </MenuItem>
         <MenuItem
-          href="/enquiry"
+          href="/company"
           icon={<i className="tabler-clipboard-data" />}
         >
-          Enquiry
+          Company Management
         </MenuItem>
         <MenuItem
-          href="/register-event-popup"
+          href="/user"
           icon={<i className="tabler-clipboard-data" />}
         >
-          Register Event pop-up
+          User Management
         </MenuItem>
-        {userRole !== "client" && ( // Check if the user is NOT a client
-          <SubMenu
-            label={"Roles & Permissions"}
-            icon={<i className="tabler-lock" />}
+        {userRole !== "client" && (
+          <MenuItem
+            href={`/apps/settings`}
+            icon={<i className="tabler-user-cog"></i>}
           >
-            <MenuItem
-              href={`/apps/roles`}
-              icon={<i className="tabler-user-cog"></i>}
-            >
-              Roles
-            </MenuItem>
-            <MenuItem
-              href={`/permissions`}
-              icon={<i className="tabler-accessible"></i>}
-            >
-              Permissions
-            </MenuItem>
-          </SubMenu>
+            Settings
+          </MenuItem>
         )}
-        {/* <MenuItem href='/content-management/pages' icon={<i className='tabler-brand-pagekit' />}>
-          Pages
-        </MenuItem>
-        <MenuItem href='/content-management/menus' icon={<i className='tabler-menu-2' />}>
-          Menus
-        </MenuItem>
-        <MenuItem href='/content-management/popups' icon={<i className='tabler-box-model-2' />}>
-          Popup
-        </MenuItem>
-        <MenuItem href='/content-management/events' icon={<i className='tabler-calendar-event' />}>
-          Events
-        </MenuItem>
-        <MenuItem href='/content-management/recrutments' icon={<i className='tabler-briefcase' />}>
-          Recrutments
-        </MenuItem>
-        <SubMenu
-          label={"Users"}
-          icon={<i className='tabler-users-group' />}
-        >
-          <MenuItem href={`/users/management`} icon={<i className='tabler-users'></i>}>Users</MenuItem>
-          <MenuItem href={`/users/roles`} icon={<i className='tabler-user-cog'></i>}>Roles</MenuItem>
-          <MenuItem href={`/users/permissions`} icon={<i className='tabler-accessible'></i>}>Permissions</MenuItem>
-        </SubMenu>
-        <SubMenu
-          label={"Settings"}
-          icon={<i className='tabler-setting' />}
-        >
-          <MenuItem href={`/settings/organizations`} icon={<i className='tabler-affiliate'></i>}>Organizations</MenuItem>
-          <MenuItem href={`/settings/content-blocks`} icon={<i className='tabler-box-margin'></i>}>Content Blocks</MenuItem>
-          <MenuItem href={`/settings/templates`} icon={<i className='tabler-template'></i>}>Templates</MenuItem>
-          <MenuItem href={`/settings/modules`} icon={<i className='tabler-stack-middle'></i>}>Modules</MenuItem>
-          <MenuItem href={`/settings/general`} icon={<i className='tabler-file-settings'></i>}>General</MenuItem>
-        </SubMenu> */}
       </Menu>
-      {/* <Menu
-        popoutMenuOffset={{ mainAxis: 23 }}
-        menuItemStyles={menuItemStyles(verticalNavOptions, theme, settings)}
-        renderExpandIcon={({ open }) => <RenderExpandIcon open={open} transitionDuration={transitionDuration} />}
-        renderExpandedMenuItemIcon={{ icon: <i className='tabler-circle text-xs' /> }}
-        menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
-      >
-        <GenerateVerticalMenu menuData={menuData(dictionary, params)} />
-      </Menu> */}
     </ScrollWrapper>
   );
 };

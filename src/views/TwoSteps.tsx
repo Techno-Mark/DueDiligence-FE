@@ -157,11 +157,8 @@ const TwoSteps = () => {
               <div className="flex flex-col gap-1 mbe-6">
                 <Typography variant="h4">Two Step Verification 💬</Typography>
                 <Typography>
-                  We sent a verification code to your mobile. Enter the code
-                  from the mobile in the field below.
-                </Typography>
-                <Typography className="font-medium" color="text.primary">
-                  {maskEmail(email)}
+                  We sent a verification code to your email. Enter the code
+                  from the {maskEmail(email)} in the field below.
                 </Typography>
               </div>
               <form

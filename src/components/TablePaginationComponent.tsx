@@ -5,13 +5,15 @@ import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
 
 // Third Party Imports
-import type { useReactTable } from "@tanstack/react-table";
+import { Table } from "@tanstack/react-table";
 
-const TablePaginationComponent = ({
+interface TablePaginationComponentProps<T> {
+  table: Table<T>;
+}
+
+function TablePaginationComponent<T>({
   table,
-}: {
-  table: ReturnType<typeof useReactTable>;
-}) => {
+}: TablePaginationComponentProps<T>) {
   return (
     <div className="flex justify-between items-center flex-wrap pli-6 border-bs bs-auto plb-[12.5px] gap-2">
       <Typography color="text.disabled">
@@ -57,6 +59,6 @@ const TablePaginationComponent = ({
       </div>
     </div>
   );
-};
+}
 
 export default TablePaginationComponent;
