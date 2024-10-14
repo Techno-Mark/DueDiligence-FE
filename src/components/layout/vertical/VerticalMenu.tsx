@@ -131,7 +131,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
               Roles
             </MenuItem>
             <MenuItem
-              href={`/permissions`}
+              href={`/apps/permissions`}
               icon={<i className="tabler-accessible"></i>}
             >
               Permissions
