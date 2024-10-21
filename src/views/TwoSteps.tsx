@@ -67,6 +67,8 @@ const TwoSteps = () => {
   const [otp, setOtp] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [timer, setTimer] = useState(60); // Timer state for resend button
+  const [resendDisabled, setResendDisabled] = useState(true); // Manage resend button state
   const router = useRouter();
 
   const {
@@ -85,16 +87,44 @@ const TwoSteps = () => {
     } else {
       setEmail(tempEmail);
     }
+
+    // Start the countdown when the user lands on the page
+    const intervalId = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer > 0) return prevTimer - 1;
+        setResendDisabled(false); // Enable resend after 60 seconds
+        clearInterval(intervalId); // Stop the interval when the timer reaches 0
+        return 0;
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
   }, [router]);
 
-  function maskEmail(email: string) {
+  const handleResend = () => {
+    setTimer(60); // Reset timer to 60 seconds
+    setResendDisabled(true); // Disable resend button
+    // Resend OTP logic goes here (you can call your resend OTP API)
+    toast.success("OTP resent successfully");
+
+    const intervalId = setInterval(() => {
+      setTimer((prevTimer) => {
+        if (prevTimer > 0) return prevTimer - 1;
+        setResendDisabled(false); // Enable resend after 60 seconds
+        clearInterval(intervalId); // Stop the interval when the timer reaches 0
+        return 0;
+      });
+    }, 1000);
+  };
+
+  const maskEmail = (email: string) => {
     const [localPart, domainPart] = email.split("@");
     const maskedLocalPart =
       localPart.length > 1
         ? `${"*".repeat(localPart.length - 1)}${localPart[localPart.length - 1]}`
         : "*";
     return `${maskedLocalPart}@${domainPart}`;
-  }
+  };
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     if (!otp || otp.length < 6) {
@@ -191,14 +221,20 @@ const TwoSteps = () => {
                 </Button>
                 <div className="flex justify-center items-center flex-wrap gap-2">
                   <Typography>Didn&#39;t get the code?</Typography>
-                  <Typography
-                    color="primary"
-                    component={Link}
-                    href="/"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    Resend
-                  </Typography>
+                  {resendDisabled ? (
+                    <Typography color="textSecondary">
+                      Resend in {timer}s
+                    </Typography>
+                  ) : (
+                    <Typography
+                      color="primary"
+                      component="span"
+                      onClick={handleResend}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Resend
+                    </Typography>
+                  )}
                 </div>
               </form>
             </CardContent>

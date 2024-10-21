@@ -31,317 +31,163 @@ const RolesApp = async () => {
   // Vars
   const data: UsersType[] = [
     {
-      "id": 1,
-      "role": "Viewer",
-      "status": "pending",
-      "modules": [
+      id: 1,
+      role: "Super Admin",
+      status: "active",
+      modules: [
         {
-          "moduleId": 1,
-          "moduleName": "Dashboard",
-          "view": false,
-          "create": false,
-          "edit": false,
-          "delete": false
+          moduleId: 1,
+          moduleName: "Dashboard",
+          view: true,
+          create: true,
+          edit: true,
+          delete: true,
         },
         {
-          "moduleId": 2,
-          "moduleName": "Document Management",
-          "view": true,
-          "create": true,
-          "edit": true,
-          "delete": true
+          moduleId: 2,
+          moduleName: "Document Management",
+          view: true,
+          create: true,
+          edit: true,
+          delete: true,
         },
         {
-          "moduleId": 3,
-          "moduleName": "Company Management",
-          "view": true,
-          "create": false,
-          "edit": false,
-          "delete": true
-        }
-      ]
+          moduleId: 3,
+          moduleName: "Company Management",
+          view: true,
+          create: true,
+          edit: true,
+          delete: true,
+        },
+        {
+          moduleId: 4,
+          moduleName: "User Management",
+          view: true,
+          create: true,
+          edit: true,
+          delete: true,
+        },
+      ],
     },
     {
-      "id": 2,
-      "role": "Editor",
-      "status": "active",
-      "modules": [
+      id: 2,
+      role: "user",
+      status: "active",
+      modules: [
         {
-          "moduleId": 1,
-          "moduleName": "Dashboard",
-          "view": true,
-          "create": false,
-          "edit": false,
-          "delete": true
+          moduleId: 1,
+          moduleName: "Dashboard",
+          view: true,
+          create: false,
+          edit: false,
+          delete: false,
         },
         {
-          "moduleId": 2,
-          "moduleName": "Document Management",
-          "view": false,
-          "create": false,
-          "edit": true,
-          "delete": true
+          moduleId: 2,
+          moduleName: "Document Management",
+          view: true,
+          create: false,
+          edit: true,
+          delete: false,
         },
         {
-          "moduleId": 3,
-          "moduleName": "Company Management",
-          "view": false,
-          "create": true,
-          "edit": false,
-          "delete": false
-        }
-      ]
+          moduleId: 3,
+          moduleName: "Company Management",
+          view: true,
+          create: false,
+          edit: false,
+          delete: false,
+        },
+        {
+          moduleId: 4,
+          moduleName: "User Management",
+          view: true,
+          create: false,
+          edit: false,
+          delete: false,
+        },
+      ],
     },
     {
-      "id": 3,
-      "role": "Admin",
-      "status": "active",
-      "modules": [
+      id: 3,
+      role: "Admin",
+      status: "active",
+      modules: [
         {
-          "moduleId": 1,
-          "moduleName": "Dashboard",
-          "view": false,
-          "create": false,
-          "edit": false,
-          "delete": true
+          moduleId: 1,
+          moduleName: "Dashboard",
+          view: true,
+          create: true,
+          edit: true,
+          delete: true,
         },
         {
-          "moduleId": 2,
-          "moduleName": "Document Management",
-          "view": true,
-          "create": false,
-          "edit": true,
-          "delete": false
+          moduleId: 2,
+          moduleName: "Document Management",
+          view: true,
+          create: false,
+          edit: true,
+          delete: false,
         },
         {
-          "moduleId": 3,
-          "moduleName": "Company Management",
-          "view": false,
-          "create": true,
-          "edit": false,
-          "delete": false
-        }
-      ]
+          moduleId: 3,
+          moduleName: "Company Management",
+          view: false,
+          create: true,
+          edit: false,
+          delete: false,
+        },
+        {
+          moduleId: 4,
+          moduleName: "User Management",
+          view: true,
+          create: true,
+          edit: true,
+          delete: true,
+        },
+      ],
     },
     {
-      "id": 4,
-      "role": "Viewer",
-      "status": "pending",
-      "modules": [
+      id: 4,
+      role: "Viewer",
+      status: "inactive",
+      modules: [
         {
-          "moduleId": 1,
-          "moduleName": "Dashboard",
-          "view": false,
-          "create": false,
-          "edit": false,
-          "delete": false
+          moduleId: 1,
+          moduleName: "Dashboard",
+          view: true,
+          create: false,
+          edit: false,
+          delete: false,
         },
         {
-          "moduleId": 2,
-          "moduleName": "Document Management",
-          "view": false,
-          "create": true,
-          "edit": false,
-          "delete": true
+          moduleId: 2,
+          moduleName: "Document Management",
+          view: true,
+          create: false,
+          edit: false,
+          delete: false,
         },
         {
-          "moduleId": 3,
-          "moduleName": "Company Management",
-          "view": true,
-          "create": true,
-          "edit": true,
-          "delete": false
-        }
-      ]
+          moduleId: 3,
+          moduleName: "Company Management",
+          view: true,
+          create: false,
+          edit: false,
+          delete: false,
+        },
+        {
+          moduleId: 4,
+          moduleName: "User Management",
+          view: true,
+          create: false,
+          edit: false,
+          delete: false,
+        },
+      
+      ],
     },
-    {
-      "id": 5,
-      "role": "Editor",
-      "status": "active",
-      "modules": [
-        {
-          "moduleId": 1,
-          "moduleName": "Dashboard",
-          "view": true,
-          "create": false,
-          "edit": true,
-          "delete": false
-        },
-        {
-          "moduleId": 2,
-          "moduleName": "Document Management",
-          "view": false,
-          "create": true,
-          "edit": false,
-          "delete": true
-        },
-        {
-          "moduleId": 3,
-          "moduleName": "Company Management",
-          "view": true,
-          "create": false,
-          "edit": true,
-          "delete": false
-        }
-      ]
-    },
-    {
-      "id": 6,
-      "role": "Admin",
-      "status": "inactive",
-      "modules": [
-        {
-          "moduleId": 1,
-          "moduleName": "Dashboard",
-          "view": true,
-          "create": false,
-          "edit": true,
-          "delete": true
-        },
-        {
-          "moduleId": 2,
-          "moduleName": "Document Management",
-          "view": true,
-          "create": false,
-          "edit": false,
-          "delete": true
-        },
-        {
-          "moduleId": 3,
-          "moduleName": "Company Management",
-          "view": false,
-          "create": true,
-          "edit": true,
-          "delete": false
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "role": "Viewer",
-      "status": "inactive",
-      "modules": [
-        {
-          "moduleId": 1,
-          "moduleName": "Dashboard",
-          "view": false,
-          "create": true,
-          "edit": true,
-          "delete": true
-        },
-        {
-          "moduleId": 2,
-          "moduleName": "Document Management",
-          "view": true,
-          "create": false,
-          "edit": true,
-          "delete": false
-        },
-        {
-          "moduleId": 3,
-          "moduleName": "Company Management",
-          "view": false,
-          "create": true,
-          "edit": false,
-          "delete": false
-        }
-      ]
-    },
-    {
-      "id": 8,
-      "role": "Editor",
-      "status": "pending",
-      "modules": [
-        {
-          "moduleId": 1,
-          "moduleName": "Dashboard",
-          "view": false,
-          "create": false,
-          "edit": true,
-          "delete": true
-        },
-        {
-          "moduleId": 2,
-          "moduleName": "Document Management",
-          "view": true,
-          "create": true,
-          "edit": true,
-          "delete": false
-        },
-        {
-          "moduleId": 3,
-          "moduleName": "Company Management",
-          "view": true,
-          "create": false,
-          "edit": false,
-          "delete": false
-        }
-      ]
-    },
-    {
-      "id": 9,
-      "role": "Viewer",
-      "status": "pending",
-      "modules": [
-        {
-          "moduleId": 1,
-          "moduleName": "Dashboard",
-          "view": false,
-          "create": false,
-          "edit": true,
-          "delete": false
-        },
-        {
-          "moduleId": 2,
-          "moduleName": "Document Management",
-          "view": false,
-          "create": true,
-          "edit": false,
-          "delete": false
-        },
-        {
-          "moduleId": 3,
-          "moduleName": "Company Management",
-          "view": false,
-          "create": true,
-          "edit": false,
-          "delete": true
-        }
-      ]
-    },
-    {
-      "id": 10,
-      "role": "Editor",
-      "status": "pending",
-      "modules": [
-        {
-          "moduleId": 1,
-          "moduleName": "Dashboard",
-          "view": false,
-          "create": true,
-          "edit": true,
-          "delete": true
-        },
-        {
-          "moduleId": 2,
-          "moduleName": "Document Management",
-          "view": false,
-          "create": false,
-          "edit": true,
-          "delete": true
-        },
-        {
-          "moduleId": 3,
-          "moduleName": "Company Management",
-          "view": true,
-          "create": false,
-          "edit": false,
-          "delete": false
-        }
-      ]
-    }
-  ]
-  
+  ];
 
   return (
     <Grid item xs={12} spacing={6}>

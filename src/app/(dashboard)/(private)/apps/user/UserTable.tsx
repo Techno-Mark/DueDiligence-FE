@@ -26,7 +26,6 @@ import {
 import type { ColumnDef, FilterFn } from "@tanstack/react-table";
 
 // Component Imports
-import AddRoleDrawer from "./AddRoleDrawer";
 import CustomTextField from "@core/components/mui/TextField";
 import DialogsAlert from "@/components/dialogs/alert-dialog";
 
@@ -35,22 +34,15 @@ import tableStyles from "@core/styles/table.module.css";
 import { ThemeColor } from "@/@core/types";
 import { TextFieldProps } from "@mui/material";
 import TablePaginationComponent from "@/components/TablePaginationComponent";
-
-// Define interfaces
-interface IPermission {
-  moduleId: number;
-  moduleName: string;
-  view: boolean;
-  create: boolean;
-  edit: boolean;
-  delete: boolean;
-}
+import AddUserDrawer from "./AddUserDrawer";
 
 interface UsersType {
   id: number;
+  fullName: string;
+  phoneNumber: string;
+  email: string;
   role: string;
   status: string;
-  modules: IPermission[];
 }
 
 type UsersTypeWithAction = UsersType & {
@@ -111,7 +103,7 @@ const userStatusObj: UserStatusType = {
 // Column Definitions
 const columnHelper = createColumnHelper<UsersTypeWithAction>();
 
-const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
+const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
   const [selectedUserData, setSelectedUserData] = useState<UsersType | null>(
@@ -155,8 +147,41 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
         ),
         enableSorting: false,
       }),
+      columnHelper.accessor("fullName", {
+        header: "Full Name",
+        enableSorting: true,
+        cell: ({ row }) => (
+          <div className="flex items-center gap-2">
+            <Typography className="capitalize" color="text.primary">
+              {row.original.fullName}
+            </Typography>
+          </div>
+        ),
+      }),
+      columnHelper.accessor("email", {
+        header: "Email",
+        enableSorting: true,
+        cell: ({ row }) => (
+          <div className="flex items-center gap-2">
+            <Typography className="capitalize" color="text.primary">
+              {row.original.email}
+            </Typography>
+          </div>
+        ),
+      }),
+      columnHelper.accessor("phoneNumber", {
+        header: "Phone Number",
+        cell: ({ row }) => (
+          <div className="flex items-center gap-2">
+            <Typography className="capitalize" color="text.primary">
+              {row.original.phoneNumber}
+            </Typography>
+          </div>
+        ),
+      }),
       columnHelper.accessor("role", {
-        header: "Role Name",
+        header: "Role",
+        enableSorting: true,
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
             <Typography className="capitalize" color="text.primary">
@@ -167,6 +192,7 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
       }),
       columnHelper.accessor("status", {
         header: "Status",
+        enableSorting: true,
         cell: ({ row }) => (
           <div className="flex items-center gap-3">
             <Chip
@@ -231,13 +257,13 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
     if (deleteUserId !== null) {
       setData((prevData) =>
         prevData.filter((user) => user.id !== deleteUserId)
-      ); // Delete the user
+      ); 
     }
-    setShowDeleteDialog(false); // Close the dialog
+    setShowDeleteDialog(false); 
   };
 
   const handleDeleteCancel = () => {
-    setShowDeleteDialog(false); // Close the dialog without deleting
+    setShowDeleteDialog(false); 
   };
 
   return (
@@ -268,7 +294,7 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
               onClick={handleAddNewClick}
               className="max-sm:is-full"
             >
-              Add New Role
+              Add New User
             </Button>
           </div>
         </div>
@@ -334,7 +360,7 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
       </Card>
 
       {/* Add Role Drawer */}
-      <AddRoleDrawer
+      <AddUserDrawer
         open={addUserOpen}
         handleClose={handleDrawerClose}
         userData={selectedUserData}
@@ -345,7 +371,7 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
       <DialogsAlert
         open={showDeleteDialog}
         title="Delete "
-        description="Are you sure you want to delete this role?"
+        description="Are you sure you want to delete this User?"
         agreeText="Yes"
         disagreeText="No"
         onAgree={handleDeleteConfirm}
@@ -356,4 +382,4 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
   );
 };
 
-export default RoleListTable;
+export default UserListTable;

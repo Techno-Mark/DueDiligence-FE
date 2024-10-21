@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { Dispatch, SetStateAction, useState, useEffect } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import {
   Button,
   Drawer,
@@ -30,10 +31,8 @@ interface UsersType {
 
 interface IFormValues {
   rolename: string;
-  username: string;
-  email: string;
-  role: string;
   status: string;
+  permissions: IPermission[];
 }
 
 const initialPermissions: IPermission[] = [
@@ -74,134 +73,117 @@ const initialPermissions: IPermission[] = [
 type Props = {
   open: boolean;
   handleClose: () => void;
-  userData?: UsersType[];
-  setData: (data: UsersType[]) => void;
+  userData?: UsersType | null;
+  setData: Dispatch<SetStateAction<UsersType[]>>;
 };
 
-const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
-  const [permissions, setPermissions] =
-    useState<IPermission[]>(initialPermissions);
-  console.log("🚀 ~ AddRoleDrawer ~ permissions:", permissions);
-  const [permissionError, setPermissionError] = useState<string>("");
+const validationSchema = Yup.object({
+  rolename: Yup.string().required("Role name is required"),
+  status: Yup.string().required("Status is required"),
+  permissions: Yup.array().test(
+    "at-least-one-permission",
+    "Please select at least one permission across all modules",
+    (permissions) => {
+      if (!permissions) return false;
+      return permissions.some((module) =>
+        Object.entries(module)
+          .filter(([key]) => ["view", "create", "edit", "delete"].includes(key))
+          .some(([, value]) => value === true)
+      );
+    }
+  ),
+});
 
-  const {
-    control,
-    reset: resetForm,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IFormValues>({
-    defaultValues: {
+const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
+  // Initialize form values
+  const formik = useFormik<IFormValues>({
+    initialValues: {
       rolename: "",
-      username: "",
-      email: "",
-      role: "",
       status: "",
+      permissions: initialPermissions,
+    },
+    validationSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
+    enableReinitialize: true, // Enable reinitialization
+    onSubmit: (values) => {
+      const newRole: UsersType = {
+        id: userData?.id || new Date().getTime(),
+        role: values.rolename,
+        status: values.status,
+        modules: values.permissions,
+      };
+
+      setData((prevData: UsersType[]) => {
+        if (userData) {
+          return prevData.map((role) =>
+            role.id === userData.id ? newRole : role
+          );
+        }
+        return [...prevData, newRole];
+      });
+      handleReset();
+      handleClose();
     },
   });
 
-  // Update state when checkbox changes
-  const handleChangePermission = (updatedModule: IPermission) => {
-    setPermissions((prevPermissions) =>
-      prevPermissions.map((module) =>
-        module.moduleId === updatedModule.moduleId ? updatedModule : module
-      )
-    );
-    // Clear error when any permission is selected
-    if (Object.values(updatedModule).slice(2).some(Boolean)) {
-      setPermissionError("");
+  // Use useEffect to update form values when userData changes
+  useEffect(() => {
+    if (open && userData) {
+      // If editing existing role
+      formik.setValues({
+        rolename: userData.role,
+        status: userData.status,
+        permissions: userData.modules,
+      });
+    } else if (open && !userData) {
+      // If adding new role
+      formik.setValues({
+        rolename: "",
+        status: "",
+        permissions: initialPermissions,
+      });
     }
+  }, [open, userData]);
+
+  const getPermissionsError = () => {
+    if (formik.touched.permissions && formik.errors.permissions) {
+      return typeof formik.errors.permissions === "string"
+        ? formik.errors.permissions
+        : "Please check the permissions";
+    }
+    return "";
   };
 
-  // Handle 'Select All' checkbox logic
+  const handleChangePermission = (
+    moduleId: number,
+    field: string,
+    value: boolean
+  ) => {
+    const newPermissions = formik.values.permissions.map((module) =>
+      module.moduleId === moduleId ? { ...module, [field]: value } : module
+    );
+    formik.setFieldValue("permissions", newPermissions);
+  };
+
   const handleSelectAll = (moduleId: number, isChecked: boolean) => {
-    setPermissions((prevPermissions) =>
-      prevPermissions.map((module) =>
-        module.moduleId === moduleId
-          ? {
-              ...module,
-              view: isChecked,
-              create: isChecked,
-              edit: isChecked,
-              delete: isChecked,
-            }
-          : module
-      )
+    const newPermissions = formik.values.permissions.map((module) =>
+      module.moduleId === moduleId
+        ? {
+            ...module,
+            view: isChecked,
+            create: isChecked,
+            edit: isChecked,
+            delete: isChecked,
+          }
+        : module
     );
-    // Clear error when any permission is selected
-    if (isChecked) {
-      setPermissionError("");
-    }
-  };
-
-  const validatePermissions = () => {
-    let hasAtLeastOnePermission = false;
-    let allModulesValid = true;
-
-    permissions.forEach((module) => {
-      const hasPermission = [
-        module.view,
-        module.create,
-        module.edit,
-        module.delete,
-      ].some(Boolean);
-      if (hasPermission) {
-        hasAtLeastOnePermission = true;
-      } else {
-        allModulesValid = false;
-      }
-    });
-
-    if (!hasAtLeastOnePermission) {
-      setPermissionError(
-        "Please select at least one permission across all modules."
-      );
-      return false;
-    }
-
-    if (!allModulesValid) {
-
-      setPermissionError("All permissions must be selected for each module.");
-      return false;
-    }
-
-    console.log("Hello1");
-    setPermissionError("");
-    return true;
-  };
-
-  const onSubmit = (data: IFormValues) => {
-    console.log("Alvish", validatePermissions);
-
-    if (!validatePermissions) {
-      return;
-    }
-
-    const newRole: UsersType = {
-      id: (userData?.length && userData.length + 1) || 1,
-      role: data.rolename,
-      status: data.status,
-      modules: permissions.map((module) => ({
-        moduleId: module.moduleId,
-        moduleName: module.moduleName,
-        view: module.view,
-        create: module.create,
-        edit: module.edit,
-        delete: module.delete,
-      })),
-    };
-
-    setData([...(userData ?? []), newRole]);
-    handleClose();
-    resetForm();
-    setPermissions(initialPermissions);
-    setPermissionError("");
+    formik.setFieldValue("permissions", newPermissions);
   };
 
   const handleReset = () => {
+    formik.resetForm();
     handleClose();
-    resetForm();
-    setPermissions(initialPermissions);
-    setPermissionError("");
   };
 
   return (
@@ -214,7 +196,9 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
       sx={{ "& .MuiDrawer-paper": { width: { xs: 350, sm: 450 } } }}
     >
       <div className="flex items-center justify-between plb-5 pli-6">
-        <Typography variant="h5">Add New Role</Typography>
+        <Typography variant="h5">
+          {userData ? "Edit Role" : "Add New Role"}
+        </Typography>
         <IconButton size="small" onClick={handleReset}>
           <i className="tabler-x text-2xl text-textPrimary" />
         </IconButton>
@@ -222,48 +206,39 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
       <Divider />
       <div>
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={formik.handleSubmit}
           className="flex flex-col gap-6 p-6"
         >
-          <Controller
+          <CustomTextField
+            fullWidth
+            id="rolename"
             name="rolename"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <CustomTextField
-                {...field}
-                fullWidth
-                label="Role Name*"
-                placeholder="Role Name"
-                {...(errors.rolename && {
-                  error: true,
-                  helperText: "This field is required.",
-                })}
-              />
-            )}
+            label="Role Name*"
+            placeholder="Role Name"
+            value={formik.values.rolename}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.rolename && Boolean(formik.errors.rolename)}
+            helperText={formik.touched.rolename && formik.errors.rolename}
           />
-          <Controller
+
+          <CustomTextField
+            select
+            fullWidth
+            id="status"
             name="status"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <CustomTextField
-                select
-                fullWidth
-                label="Select Status*"
-                placeholder="Select Status"
-                {...field}
-                {...(errors.status && {
-                  error: true,
-                  helperText: "This field is required.",
-                })}
-              >
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="inactive">Inactive</MenuItem>
-              </CustomTextField>
-            )}
-          />
-          {/* Permissions Table */}
+            label="Select Status*"
+            placeholder="Select Status"
+            value={formik.values.status}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.status && Boolean(formik.errors.status)}
+            helperText={formik.touched.status && formik.errors.status}
+          >
+            <MenuItem value="active">Active</MenuItem>
+            <MenuItem value="inactive">Inactive</MenuItem>
+          </CustomTextField>
+
           <div className="text-[12px] flex flex-col pb-5 -ml-2">
             <table className="min-w-[90%] divide-y divide-gray-200">
               <thead>
@@ -279,7 +254,7 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {permissions.map((item) => (
+                {formik.values.permissions.map((item) => (
                   <tr key={item.moduleId}>
                     <td className="whitespace-nowrap w-1/4">
                       <div className="flex items-start">
@@ -290,7 +265,6 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
                         </div>
                       </div>
                     </td>
-                    {/* Select All Checkbox */}
                     <td className="pr-2">
                       <Checkbox
                         checked={
@@ -301,15 +275,15 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
                         }
                       />
                     </td>
-                    {/* Individual Checkboxes */}
                     <td className="pr-2">
                       <Checkbox
                         checked={item.view}
                         onChange={(e) =>
-                          handleChangePermission({
-                            ...item,
-                            view: e.target.checked,
-                          })
+                          handleChangePermission(
+                            item.moduleId,
+                            "view",
+                            e.target.checked
+                          )
                         }
                       />
                     </td>
@@ -317,10 +291,11 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
                       <Checkbox
                         checked={item.create}
                         onChange={(e) =>
-                          handleChangePermission({
-                            ...item,
-                            create: e.target.checked,
-                          })
+                          handleChangePermission(
+                            item.moduleId,
+                            "create",
+                            e.target.checked
+                          )
                         }
                       />
                     </td>
@@ -328,10 +303,11 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
                       <Checkbox
                         checked={item.edit}
                         onChange={(e) =>
-                          handleChangePermission({
-                            ...item,
-                            edit: e.target.checked,
-                          })
+                          handleChangePermission(
+                            item.moduleId,
+                            "edit",
+                            e.target.checked
+                          )
                         }
                       />
                     </td>
@@ -339,10 +315,11 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
                       <Checkbox
                         checked={item.delete}
                         onChange={(e) =>
-                          handleChangePermission({
-                            ...item,
-                            delete: e.target.checked,
-                          })
+                          handleChangePermission(
+                            item.moduleId,
+                            "delete",
+                            e.target.checked
+                          )
                         }
                       />
                     </td>
@@ -350,12 +327,11 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
                 ))}
               </tbody>
             </table>
-            {permissionError && (
-              <FormHelperText error>{permissionError}</FormHelperText>
+            {getPermissionsError() && (
+              <FormHelperText error>{getPermissionsError()}</FormHelperText>
             )}
           </div>
 
-          {/* Submit and Cancel Buttons */}
           <div className="flex items-center gap-4">
             <Button variant="contained" type="submit">
               Submit
