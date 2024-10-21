@@ -179,7 +179,7 @@ const Logo = (props: SVGAttributes<SVGElement>) => {
     //     fill="#D21F34"
     //   />
     // </svg>
-    <img src="/images/icon.png" />
+    <img src="/images/icon.png" className="h-[30px]"/>
   );
 };
 

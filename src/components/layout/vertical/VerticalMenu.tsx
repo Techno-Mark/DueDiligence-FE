@@ -91,7 +91,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
         <MenuItem
-          href="/dashboard"
+          href="/home"
           icon={<i className="tabler-clipboard-data" />}
         >
           Dashboard
@@ -109,7 +109,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
           Company Management
         </MenuItem>
         <MenuItem
-          href="/user"
+          href="/apps/user"
           icon={<i className="tabler-clipboard-data" />}
         >
           User Management

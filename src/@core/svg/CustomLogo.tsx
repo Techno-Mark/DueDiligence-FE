@@ -5,7 +5,7 @@ const CustomLogo = ({ collapsed }: { collapsed: boolean }) => {
   if (!collapsed) {
     return (
       <img
-        src="/images/Franchoice World Logo.png"
+        src="/images/dcspro.png"
         className="w-[150px] h-[30px]"
       />
     );

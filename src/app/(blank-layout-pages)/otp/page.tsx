@@ -20,7 +20,7 @@ const OtpPage = async () => {
   }
 
   if (session.user && session.user.requiresOtp === false) {
-    redirect("/dashboard");
+    redirect("/home");
   }
 
   const mode = getServerMode();
