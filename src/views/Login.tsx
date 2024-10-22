@@ -226,7 +226,7 @@ const Login = ({ mode }: { mode: SystemMode }) => {
           </div>
           <div className="flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-8 sm:mbs-11 md:mbs-0">
             <div className="flex flex-col gap-1">
-              <Typography variant="h4">{`Welcome to Due Diligence Admin Panel!`}</Typography>
+              <Typography variant="h4">{`Welcome to Due Diligence!`}</Typography>
               <Typography>Please sign-in to your account</Typography>
             </div>
 
@@ -320,20 +320,22 @@ const Login = ({ mode }: { mode: SystemMode }) => {
               >
                 {loading ? (
                   <>
-                    <div className="relative mr-2">
-                      <CircularProgressDeterminate
-                        variant="determinate"
-                        size={20}
-                        thickness={4}
-                        value={100}
-                      />
-                      <CircularProgressIndeterminate
-                        variant="indeterminate"
-                        disableShrink
-                        size={20}
-                        thickness={6}
-                      />
-                    </div>{" "}
+                    <div className=" relative mr-2 my-auto">
+                        <div className="flex justify-center items-center">
+                          <CircularProgressDeterminate
+                            variant="determinate"
+                            size={20}
+                            thickness={4}
+                            value={100}
+                          />
+                          <CircularProgressIndeterminate
+                            variant="indeterminate"
+                            disableShrink
+                            size={20}
+                            thickness={6}
+                          />
+                        </div>
+                      </div>{" "}
                     Please wait
                   </>
                 ) : (

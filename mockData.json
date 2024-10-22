@@ -2,12 +2,14 @@
     "users": [
         {
             "email": "test@example.com",
+            "name":"Test User",
             "password": "password123",
             "otp": "123456",
             "role": "admin"
         },
         {
             "email": "client@example.com",
+            "name": "Client User",
             "password": "password321",
             "otp": "654321",
             "role": "client"

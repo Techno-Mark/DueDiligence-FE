@@ -25,6 +25,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useState } from "react";
 import { styled } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 type ErrorType = {
   message: string[];
@@ -55,6 +56,7 @@ const CircularProgressIndeterminate = styled(
 }));
 
 const ForgotPassword = () => {
+  const router = useRouter()
   const [loading, setLoading] = useState(false);
   const [errorState, setErrorState] = useState<ErrorType | null>(null);
 
@@ -70,7 +72,8 @@ const ForgotPassword = () => {
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    setLoading(true);
+    setLoading(true)
+    router.push("/login")
   };
 
   return (
@@ -121,19 +124,21 @@ const ForgotPassword = () => {
                 >
                   {loading ? (
                     <>
-                      <div className="relative mr-2">
-                        <CircularProgressDeterminate
-                          variant="determinate"
-                          size={20}
-                          thickness={4}
-                          value={100}
-                        />
-                        <CircularProgressIndeterminate
-                          variant="indeterminate"
-                          disableShrink
-                          size={20}
-                          thickness={6}
-                        />
+                      <div className=" relative mr-2 my-auto">
+                        <div className="flex justify-center items-center">
+                          <CircularProgressDeterminate
+                            variant="determinate"
+                            size={20}
+                            thickness={4}
+                            value={100}
+                          />
+                          <CircularProgressIndeterminate
+                            variant="indeterminate"
+                            disableShrink
+                            size={20}
+                            thickness={6}
+                          />
+                        </div>
                       </div>{" "}
                       Please wait
                     </>

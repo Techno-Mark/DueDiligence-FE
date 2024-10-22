@@ -92,26 +92,23 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
       >
         <MenuItem
           href="/home"
-          icon={<i className="tabler-clipboard-data" />}
+          icon={<i className="tabler-dashboard" />} // Home icon for the dashboard
         >
           Dashboard
         </MenuItem>
         <MenuItem
           href="/document"
-          icon={<i className="tabler-clipboard-data" />}
+          icon={<i className="tabler-file-text" />} // File icon for document management
         >
           Document Management
         </MenuItem>
         <MenuItem
           href="/company"
-          icon={<i className="tabler-clipboard-data" />}
+          icon={<i className="tabler-building" />} // Building icon for company management
         >
           Company Management
         </MenuItem>
-        <MenuItem
-          href="/apps/user"
-          icon={<i className="tabler-clipboard-data" />}
-        >
+        <MenuItem href="/apps/user" icon={<i className="tabler-users-group" />}>
           User Management
         </MenuItem>
         {userRole !== "client" && (

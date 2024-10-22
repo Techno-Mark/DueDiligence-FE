@@ -6,7 +6,7 @@ const CustomLogo = ({ collapsed }: { collapsed: boolean }) => {
     return (
       <img
         src="/images/dcspro.png"
-        className="w-[150px] h-[30px]"
+        className="w-[110px] h-[30px]"
       />
     );
   }

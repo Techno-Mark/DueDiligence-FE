@@ -12,6 +12,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 import CustomTextField from "@core/components/mui/TextField";
+import { toast } from "react-toastify";
 
 interface IPermission {
   moduleId: number;
@@ -99,13 +100,13 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
   const formik = useFormik<IFormValues>({
     initialValues: {
       rolename: "",
-      status: "",
+      status: "active", // Set default status to active
       permissions: initialPermissions,
     },
     validationSchema,
     validateOnChange: true,
     validateOnBlur: true,
-    enableReinitialize: true, // Enable reinitialization
+    enableReinitialize: true,
     onSubmit: (values) => {
       const newRole: UsersType = {
         id: userData?.id || new Date().getTime(),
@@ -113,6 +114,12 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
         status: values.status,
         modules: values.permissions,
       };
+
+      if (userData) {
+        toast.success("Access Group has been updated successfully");
+      } else {
+        toast.success("Access Group has been created successfully");
+      }
 
       setData((prevData: UsersType[]) => {
         if (userData) {
@@ -140,7 +147,7 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
       // If adding new role
       formik.setValues({
         rolename: "",
-        status: "",
+        status: "active", // Set default status to active for new roles
         permissions: initialPermissions,
       });
     }
@@ -197,7 +204,7 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
     >
       <div className="flex items-center justify-between plb-5 pli-6">
         <Typography variant="h5">
-          {userData ? "Edit Role" : "Add New Role"}
+          {userData ? "Edit Access Group" : "Add Access Group"}
         </Typography>
         <IconButton size="small" onClick={handleReset}>
           <i className="tabler-x text-2xl text-textPrimary" />
@@ -213,8 +220,8 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
             fullWidth
             id="rolename"
             name="rolename"
-            label="Role Name*"
-            placeholder="Role Name"
+            label="Access Group Name*"
+            placeholder="Access Group Name"
             value={formik.values.rolename}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -222,22 +229,25 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
             helperText={formik.touched.rolename && formik.errors.rolename}
           />
 
-          <CustomTextField
-            select
-            fullWidth
-            id="status"
-            name="status"
-            label="Select Status*"
-            placeholder="Select Status"
-            value={formik.values.status}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.status && Boolean(formik.errors.status)}
-            helperText={formik.touched.status && formik.errors.status}
-          >
-            <MenuItem value="active">Active</MenuItem>
-            <MenuItem value="inactive">Inactive</MenuItem>
-          </CustomTextField>
+          {/* Only show status dropdown when editing */}
+          {userData && (
+            <CustomTextField
+              select
+              fullWidth
+              id="status"
+              name="status"
+              label="Select Status*"
+              placeholder="Select Status"
+              value={formik.values.status}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.status && Boolean(formik.errors.status)}
+              helperText={formik.touched.status && formik.errors.status}
+            >
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="inactive">Inactive</MenuItem>
+            </CustomTextField>
+          )}
 
           <div className="text-[12px] flex flex-col pb-5 -ml-2">
             <table className="min-w-[90%] divide-y divide-gray-200">
