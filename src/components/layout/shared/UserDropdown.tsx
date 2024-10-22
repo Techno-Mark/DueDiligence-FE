@@ -21,6 +21,7 @@ import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 
+
 // Third-party Imports
 import { signOut, useSession } from "next-auth/react";
 
@@ -98,6 +99,9 @@ const UserDropdown = () => {
       >
         <div className="flex items-center pli-6" tabIndex={-1}>
           <div className="flex items-start flex-col">
+            <Typography className="font-medium" color="text.primary">
+              {userName}
+            </Typography>
             <Typography variant="caption">{userEmail}</Typography>
           </div>
         </div>
@@ -139,7 +143,7 @@ const UserDropdown = () => {
                 }
               >
                 <MenuList>
-                  <div
+                  {/* <div
                     className="flex items-center plb-2 pli-6 gap-2"
                     tabIndex={-1}
                   >
@@ -156,7 +160,18 @@ const UserDropdown = () => {
                       </Typography>
                     </div>
                   </div>
-                  <Divider className="mlb-1" />
+                  <Divider className="mlb-1" /> */}
+                  <MenuItem
+                    className="mli-2 gap-3"
+                    onClick={(e) =>
+                      handleDropdownClose(e, "/change-password")
+                    }
+                  >
+                    <i className="tabler-lock" />
+                    <Typography color="text.primary">
+                      Change Password
+                    </Typography>
+                  </MenuItem>
                   <div className="flex items-center plb-2 pli-3">
                     <Button
                       fullWidth

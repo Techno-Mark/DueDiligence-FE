@@ -10,6 +10,7 @@ import {
   Divider,
 } from "@mui/material";
 import CustomTextField from "@core/components/mui/TextField";
+import { toast } from "react-toastify";
 
 interface UsersType {
   id: number;
@@ -72,6 +73,11 @@ const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
         role: values.role,
         status: values.status,
       };
+      if (userData) {
+        toast.success("User profile has been updated successfully");
+      } else {
+        toast.success("User profile has been created successfully");
+      }
 
       setData((prevData: UsersType[]) => {
         if (userData) {

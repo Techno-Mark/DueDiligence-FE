@@ -29,11 +29,27 @@ import styles from "@/libs/styles/inputOtp.module.css";
 import { toast } from "react-toastify";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
+import { CircularProgress, CircularProgressProps, styled } from "@mui/material";
 
 // Extend SlotProps to include hasError
 type ExtendedSlotProps = SlotProps & {
   hasError?: boolean;
 };
+
+const CircularProgressDeterminate = styled(
+  CircularProgress
+)<CircularProgressProps>({
+  color: "var(--mui-palette-customColors-trackBg)",
+});
+
+const CircularProgressIndeterminate = styled(
+  CircularProgress
+)<CircularProgressProps>(({ theme }) => ({
+  left: 0,
+  position: "absolute",
+  animationDuration: "440ms",
+  color: theme.palette.mode === "light" ? "#ffffff" : "#30d41a",
+}));
 
 const Slot = (props: ExtendedSlotProps) => {
   return (
@@ -216,8 +232,31 @@ const TwoSteps = () => {
                     <Typography color="error">{errors.otp.message}</Typography> // Show error message
                   )}
                 </div>
-                <Button fullWidth variant="contained" type="submit">
-                  {loading ? "Verifying..." : "Verify OTP"}
+                <Button fullWidth variant="contained" type="submit"  disabled={loading}>
+                {loading ? (
+                    <>
+                      <div className=" relative mr-2 my-auto">
+                        <div className="flex justify-center items-center">
+                          <CircularProgressDeterminate
+                            variant="determinate"
+                            size={20}
+                            thickness={4}
+                            value={100}
+                          />
+                          <CircularProgressIndeterminate
+                            variant="indeterminate"
+                            disableShrink
+                            size={20}
+                            thickness={6}
+                          />
+                        </div>
+                      </div>{" "}
+                      Please wait
+                    </>
+                  ) : (
+                    "Verify OTP"
+                  )}
+                  
                 </Button>
                 <div className="flex justify-center items-center flex-wrap gap-2">
                   <Typography>Didn&#39;t get the code?</Typography>

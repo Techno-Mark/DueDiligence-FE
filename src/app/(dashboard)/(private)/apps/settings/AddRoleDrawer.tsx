@@ -12,6 +12,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 import CustomTextField from "@core/components/mui/TextField";
+import { toast } from "react-toastify";
 
 interface IPermission {
   moduleId: number;
@@ -113,6 +114,12 @@ const AddRoleDrawer = ({ open, handleClose, userData, setData }: Props) => {
         status: values.status,
         modules: values.permissions,
       };
+
+      if (userData) {
+        toast.success("Role has been updated successfully");
+      } else {
+        toast.success("Role has been created successfully");
+      }
 
       setData((prevData: UsersType[]) => {
         if (userData) {

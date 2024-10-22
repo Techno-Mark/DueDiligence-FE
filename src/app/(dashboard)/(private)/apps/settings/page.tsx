@@ -191,9 +191,6 @@ const RolesApp = async () => {
 
   return (
     <Grid item xs={12} spacing={6}>
-      <Typography variant="h4" className="mbe-1 pb-5">
-        Roles List
-      </Typography>
       <Grid item xs={12}>
         <RoleListTable tableData={data} />
       </Grid>

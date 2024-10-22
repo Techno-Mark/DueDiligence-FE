@@ -133,6 +133,7 @@ export const authOptions: NextAuthOptions = {
             return {
               id: 1,
               email: user.email,
+              name: user.name,
               token:
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJFbWFpbCI6ImZ3X3N1cGVyYWRtaW5AeW9wbWFpbC5jb20iLCJpYXQiOjE3MjgyODU5OTl9.8UI478RcHqWdmwE4oaBRIg3l5spIKT1SJZ9uQygYwa0",
               refresh_token:
