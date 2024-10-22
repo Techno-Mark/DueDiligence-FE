@@ -117,11 +117,12 @@ const ForgotPassword = () => {
                   fullWidth
                   variant="contained"
                   type="submit"
+                  href="/login"
                   disabled={loading}
                 >
                   {loading ? (
                     <>
-                      <div className="relative mr-2">
+                      <div className="flex relative mx-auto">
                         <CircularProgressDeterminate
                           variant="determinate"
                           size={20}

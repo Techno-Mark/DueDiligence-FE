@@ -22,6 +22,7 @@ interface UsersType {
 
 interface IFormValues {
   fullName: string;
+  role: string;
   phoneNumber: string;
   email: string;
   status: string;
@@ -46,6 +47,7 @@ const validationSchema = Yup.object({
     .matches(/^\d{10}$/, "Phone Number must be exactly 10 digits")
     .required("Phone Number is required"),
   status: Yup.string().required("Status is required"),
+  role: Yup.string().required("Role is required"),
 });
 
 const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
@@ -53,6 +55,7 @@ const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
     initialValues: {
       fullName: "",
       phoneNumber: "",
+      role: "",
       email: "",
       status: "",
     },
@@ -63,10 +66,10 @@ const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
     onSubmit: (values) => {
       const newRole: UsersType = {
         id: userData?.id || new Date().getTime(),
-        fullName: userData?.fullName || "",
-        phoneNumber: userData?.phoneNumber || "",
-        email: userData?.email || "",
-        role: values.fullName,
+        fullName: values.fullName,
+        phoneNumber: values.phoneNumber,
+        email: values.email,
+        role: values.role,
         status: values.status,
       };
 
@@ -90,6 +93,7 @@ const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
       formik.setValues({
         fullName: userData.fullName,
         phoneNumber: userData.phoneNumber,
+        role: userData.role,
         email: userData.email,
         status: userData.status,
       });
@@ -98,6 +102,7 @@ const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
       formik.setValues({
         fullName: "",
         phoneNumber: "",
+        role: "",
         email: "",
         status: "",
       });
@@ -172,6 +177,25 @@ const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email}
           />
+
+          <CustomTextField
+            select
+            fullWidth
+            id="role"
+            name="role"
+            label="Select Role*"
+            placeholder="Select Role"
+            value={formik.values.role}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.role && Boolean(formik.errors.role)}
+            helperText={formik.touched.role && formik.errors.role}
+          >
+            <MenuItem value="superAdmin">Super Admin</MenuItem>
+            <MenuItem value="user">User</MenuItem>
+            <MenuItem value="admin">Admin</MenuItem>
+            <MenuItem value="viewer">Viewer</MenuItem>
+          </CustomTextField>
 
           <CustomTextField
             select
