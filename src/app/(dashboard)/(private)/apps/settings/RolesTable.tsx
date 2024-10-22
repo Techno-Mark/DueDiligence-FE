@@ -156,7 +156,7 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
         enableSorting: false,
       }),
       columnHelper.accessor("role", {
-        header: "Role Name",
+        header: "Access Group Name",
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
             <Typography className="capitalize" color="text.primary">
@@ -243,7 +243,7 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
   return (
     <>
       <Card>
-        <CardHeader title="Role List" />
+        <CardHeader title="Access Group List" />
         <CardContent>
           <div className="flex justify-end flex-col sm:flex-row max-sm:is-full pb-6 pr-6 items-start sm:items-center gap-4">
             <DebouncedInput
@@ -259,7 +259,7 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
               onClick={handleAddNewClick}
               className="max-sm:is-full "
             >
-              Add New Role
+              Add Access Group
             </Button>
           </div>
           <div className="overflow-x-auto">
@@ -313,7 +313,6 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
             </table>
           </div>
           <TablePagination
-            className="!bg-[#242492]"
             component={() => <TablePaginationComponent table={table} />}
             count={table.getFilteredRowModel().rows.length}
             rowsPerPage={table.getState().pagination.pageSize}
@@ -337,7 +336,7 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
       <DialogsAlert
         open={showDeleteDialog}
         title="Delete "
-        description="Are you sure you want to delete this role?"
+        description="Are you sure you want to delete this Access Group?"
         agreeText="Yes"
         disagreeText="No"
         onAgree={handleDeleteConfirm}

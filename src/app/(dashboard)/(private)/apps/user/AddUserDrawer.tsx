@@ -58,7 +58,7 @@ const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
       phoneNumber: "",
       role: "",
       email: "",
-      status: "",
+      status: "active", // Set default status to active
     },
     validationSchema,
     validateOnChange: true,
@@ -71,7 +71,7 @@ const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
         phoneNumber: values.phoneNumber,
         email: values.email,
         role: values.role,
-        status: values.status,
+        status: userData ? values.status : "active", // Use active for new users, submitted value for edits
       };
       if (userData) {
         toast.success("User profile has been updated successfully");
@@ -110,7 +110,7 @@ const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
         phoneNumber: "",
         role: "",
         email: "",
-        status: "",
+        status: "active", // Reset to active for new users
       });
     }
   }, [open, userData]);
@@ -176,7 +176,7 @@ const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
             id="email"
             name="email"
             label="Email*"
-            placeholder="abc@gmai.com"
+            placeholder="abc@gmail.com"
             value={formik.values.email}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -203,22 +203,25 @@ const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
             <MenuItem value="viewer">Viewer</MenuItem>
           </CustomTextField>
 
-          <CustomTextField
-            select
-            fullWidth
-            id="status"
-            name="status"
-            label="Select Status*"
-            placeholder="Select Status"
-            value={formik.values.status}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.status && Boolean(formik.errors.status)}
-            helperText={formik.touched.status && formik.errors.status}
-          >
-            <MenuItem value="active">Active</MenuItem>
-            <MenuItem value="inactive">Inactive</MenuItem>
-          </CustomTextField>
+          {/* Only show status dropdown when editing */}
+          {userData && (
+            <CustomTextField
+              select
+              fullWidth
+              id="status"
+              name="status"
+              label="Select Status*"
+              placeholder="Select Status"
+              value={formik.values.status}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.status && Boolean(formik.errors.status)}
+              helperText={formik.touched.status && formik.errors.status}
+            >
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="inactive">Inactive</MenuItem>
+            </CustomTextField>
+          )}
 
           <div className="flex items-center gap-4">
             <Button variant="contained" type="submit">
