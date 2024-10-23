@@ -29,7 +29,6 @@ import type { SystemMode } from "@core/types";
 // Component Imports
 import CustomTextField from "@core/components/mui/TextField";
 
-
 // Hook Imports
 import { useImageVariant } from "@core/hooks/useImageVariant";
 import { useSettings } from "@core/hooks/useSettings";
@@ -41,6 +40,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import type { CircularProgressProps } from "@mui/material/CircularProgress";
 import LoadingBackdrop from "@/components/LoadingBackdrop";
 import CustomLogo from "@/@core/svg/CustomLogo";
+import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 
 // Styled Custom Components
 const LoginIllustration = styled("img")(({ theme }) => ({
@@ -96,6 +96,10 @@ const schema = object({
     minLength(1, "This field is required"),
     minLength(5, "Password must be at least 5 characters long"),
   ]),
+  phoneNumber: string([
+    minLength(10, "Phone number must be at least 10 digits long"),
+  ]),
+  method: string([minLength(1, "This field is required")]),
 });
 
 const Login = ({ mode }: { mode: SystemMode }) => {
@@ -121,19 +125,23 @@ const Login = ({ mode }: { mode: SystemMode }) => {
   const theme = useTheme();
   const hidden = useMediaQuery(theme.breakpoints.down("md"));
   const authBackground = useImageVariant(mode, lightImg, darkImg);
-  const { lang: locale } = useParams()
+  const { lang: locale } = useParams();
 
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
     resolver: valibotResolver(schema),
     defaultValues: {
       email: "",
       password: "",
+      phoneNumber: "",
+      method: "email",
     },
   });
+  const method = watch("method");
 
   const characterIllustration = useImageVariant(
     mode,
@@ -237,29 +245,76 @@ const Login = ({ mode }: { mode: SystemMode }) => {
               className="flex flex-col gap-6"
             >
               <Controller
-                name="email"
+                name="method"
                 control={control}
-                rules={{ required: true }}
                 render={({ field }) => (
-                  <CustomTextField
-                    {...field}
-                    autoFocus
-                    fullWidth
-                    type="email"
-                    label="Email"
-                    placeholder="Enter your email"
-                    onChange={(e) => {
-                      field.onChange(e.target.value);
-                      errorState !== null && setErrorState(null);
-                    }}
-                    // {...((errors.email || errorState !== null) && {
-                    //   error: true,
-                    //   helperText:
-                    //     errors?.email?.message || errorState?.message[0],
-                    // })}
-                  />
+                  <RadioGroup
+                    row
+                    value={field.value} // This binds the value to the form state
+                    onChange={(e) => field.onChange(e.target.value)} // This updates the form state when the user selects an option
+                    aria-label="Login Method"
+                    name="login-method"
+                  >
+                    <FormControlLabel
+                      value="email"
+                      control={<Radio />}
+                      label="Email"
+                    />
+                    <FormControlLabel
+                      value="phoneNumber"
+                      control={<Radio />}
+                      label="Phone Number"
+                    />
+                  </RadioGroup>
                 )}
               />
+              {method === "email" && (
+                <Controller
+                  name="email"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      {...field}
+                      autoFocus
+                      fullWidth
+                      type="email"
+                      label="Email"
+                      placeholder="Enter your email"
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                        errorState !== null && setErrorState(null);
+                      }}
+                    />
+                  )}
+                />
+              )}
+
+              {method === "phoneNumber" && (
+                <Controller
+                  name="phoneNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <CustomTextField
+                      {...field}
+                      fullWidth
+                      label="Phone Number"
+                      placeholder="Enter your phone number"
+                      type="tel"
+                      inputProps={{ maxLength: 10 }}
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                        errorState !== null && setErrorState(null);
+                      }}
+                      {...(errors.phoneNumber && {
+                        error: true,
+                        helperText: errors.phoneNumber.message,
+                      })}
+                    />
+                  )}
+                />
+              )}
+
               <Controller
                 name="password"
                 control={control}
@@ -321,21 +376,21 @@ const Login = ({ mode }: { mode: SystemMode }) => {
                 {loading ? (
                   <>
                     <div className=" relative mr-2 my-auto">
-                        <div className="flex justify-center items-center">
-                          <CircularProgressDeterminate
-                            variant="determinate"
-                            size={20}
-                            thickness={4}
-                            value={100}
-                          />
-                          <CircularProgressIndeterminate
-                            variant="indeterminate"
-                            disableShrink
-                            size={20}
-                            thickness={6}
-                          />
-                        </div>
-                      </div>{" "}
+                      <div className="flex justify-center items-center">
+                        <CircularProgressDeterminate
+                          variant="determinate"
+                          size={20}
+                          thickness={4}
+                          value={100}
+                        />
+                        <CircularProgressIndeterminate
+                          variant="indeterminate"
+                          disableShrink
+                          size={20}
+                          thickness={6}
+                        />
+                      </div>
+                    </div>{" "}
                     Please wait
                   </>
                 ) : (
