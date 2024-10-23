@@ -243,7 +243,7 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
   return (
     <>
       <Card>
-        <div className="flex justify-between flex-col items-start md:flex-row md:items-center p-6 border-bs gap-4">
+        <div className="flex justify-between flex-col items-start md:flex-row md:items-center p-2 border-bs gap-4">
             <CardHeader title="Access Group List" />
           <div className="flex flex-col sm:flex-row max-sm:is-full items-start sm:items-center gap-4">
             <DebouncedInput
@@ -263,7 +263,7 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
             </Button>
           </div>
         </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto p-2">
           <table className={tableStyles.table}>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (

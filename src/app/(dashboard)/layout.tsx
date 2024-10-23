@@ -27,7 +27,7 @@ import { redirect } from "next/navigation";
 const Layout = async ({ children }: ChildrenType) => {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
+  if (!session || !session.user.token) {
     redirect("/login");
   }
   // Vars

@@ -71,7 +71,7 @@ const Logo = () => {
   // You may return any JSX here to display a logo in the sidebar header
   // return <Img src='/next.svg' width={100} height={25} alt='logo' /> // for example
   return (
-    <Link href='/' className='flex items-center'>
+    <div className='flex items-center'>
       <VuexyLogo className='text-2xl text-primary' />
       <LogoText
         ref={logoTextRef}
@@ -81,7 +81,7 @@ const Logo = () => {
       >
         {themeConfig.templateName}
       </LogoText>
-    </Link>
+    </div>
   )
 }
 

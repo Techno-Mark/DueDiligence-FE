@@ -18,10 +18,9 @@ import Button from "@mui/material/Button";
 // Third-party Imports
 import { Controller, useForm } from "react-hook-form";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { object, minLength, string, email } from "valibot";
 import type { SubmitHandler } from "react-hook-form";
-import type { Input } from "valibot";
 import classnames from "classnames";
+import * as yup from "yup";
 
 // Type Imports
 import type { SystemMode } from "@core/types";
@@ -41,6 +40,7 @@ import type { CircularProgressProps } from "@mui/material/CircularProgress";
 import LoadingBackdrop from "@/components/LoadingBackdrop";
 import CustomLogo from "@/@core/svg/CustomLogo";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 // Styled Custom Components
 const LoginIllustration = styled("img")(({ theme }) => ({
@@ -85,21 +85,33 @@ type ErrorType = {
   message: string[];
 };
 
-type FormData = Input<typeof schema>;
+type FormData = {
+  email?: string;
+  password: string;
+  phoneNumber?: string;
+  method: "email" | "phoneNumber";
+};
 
-const schema = object({
-  email: string([
-    minLength(1, "This field is required"),
-    email("Email is invalid"),
-  ]),
-  password: string([
-    minLength(1, "This field is required"),
-    minLength(5, "Password must be at least 5 characters long"),
-  ]),
-  phoneNumber: string([
-    minLength(10, "Phone number must be at least 10 digits long"),
-  ]),
-  method: string([minLength(1, "This field is required")]),
+const schema: yup.ObjectSchema<FormData> = yup.object().shape({
+  email: yup.string().when("method", {
+    is: "email",
+    then: (schema) =>
+      schema.required("Email is required").email("Email is invalid"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  phoneNumber: yup.string().when("method", {
+    is: "phoneNumber",
+    then: (schema) =>
+      schema
+        .required("Phone number is required")
+        .matches(/^\d{10}$/, "Phone number must be exactly 10 digits"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  password: yup.string().required("Password is required"),
+  method: yup
+    .string()
+    .oneOf(["email", "phoneNumber"])
+    .required("Method is required"), 
 });
 
 const Login = ({ mode }: { mode: SystemMode }) => {
@@ -125,7 +137,6 @@ const Login = ({ mode }: { mode: SystemMode }) => {
   const theme = useTheme();
   const hidden = useMediaQuery(theme.breakpoints.down("md"));
   const authBackground = useImageVariant(mode, lightImg, darkImg);
-  const { lang: locale } = useParams();
 
   const {
     control,
@@ -133,13 +144,14 @@ const Login = ({ mode }: { mode: SystemMode }) => {
     watch,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: valibotResolver(schema),
+    resolver: yupResolver(schema),
     defaultValues: {
       email: "",
       password: "",
       phoneNumber: "",
       method: "email",
     },
+    mode: "onChange",
   });
   const method = watch("method");
 
@@ -188,19 +200,48 @@ const Login = ({ mode }: { mode: SystemMode }) => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     setLoading(true);
     try {
-      const res = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-      });
+      if (data.method === "email") {
+        const email = data.email;
+        const password = data.password;
 
-      if (res?.error) {
-        toast.error(res.error);
-      } else if (res?.ok) {
-        // Store the email in sessionStorage
-        sessionStorage.setItem("tempEmail", data.email);
-        toast.success("OTP sent to your email");
-        router.push("/otp");
+        if (!email || !password) {
+          toast.error("Email and Password are required");
+          return;
+        }
+
+        const res = await signIn("credentials", {
+          email: email,
+          password: password,
+          redirect: false,
+        });
+
+        if (res?.error) {
+          toast.error(res.error);
+        } else if (res?.ok) {
+          toast.success("Login Successful");
+          router.push("/home");
+        }
+      } else if (data.method === "phoneNumber") {
+        const phoneNumber = data.phoneNumber;
+
+        if (!phoneNumber) {
+          toast.error("Phone number is required");
+          return;
+        }
+
+        const res = await signIn("credentials", {
+          phoneNumber: phoneNumber,
+          password: data.password,
+          redirect: false,
+        });
+
+        if (res?.error) {
+          toast.error(res.error);
+        } else if (res?.ok) {
+          sessionStorage.setItem("tempPhoneNumber", phoneNumber);
+          toast.success("OTP sent to your phone");
+          router.push("/otp");
+        }
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -250,8 +291,8 @@ const Login = ({ mode }: { mode: SystemMode }) => {
                 render={({ field }) => (
                   <RadioGroup
                     row
-                    value={field.value} // This binds the value to the form state
-                    onChange={(e) => field.onChange(e.target.value)} // This updates the form state when the user selects an option
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value)}
                     aria-label="Login Method"
                     name="login-method"
                   >

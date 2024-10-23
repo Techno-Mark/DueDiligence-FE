@@ -2,6 +2,7 @@
     "users": [
         {
             "email": "test@example.com",
+            "phoneNumber":"1234567891",
             "name":"Test User",
             "password": "password123",
             "otp": "123456",
@@ -9,6 +10,7 @@
         },
         {
             "email": "client@example.com",
+            "phoneNumber":"9876543211",
             "name": "Client User",
             "password": "password321",
             "otp": "654321",

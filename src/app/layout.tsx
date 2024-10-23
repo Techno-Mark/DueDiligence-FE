@@ -16,7 +16,7 @@ export const metadata = {
     "Vuexy - MUI Next.js Admin Dashboard Template - is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.",
 };
 
-const RootLayout = ({ children }: ChildrenType) => {
+const RootLayout = async ({ children }: ChildrenType) => {
   // Vars
   const direction = "ltr";
 

@@ -56,7 +56,7 @@ const Slot = (props: ExtendedSlotProps) => {
     <div
       className={classnames(styles.slot, {
         [styles.slotActive]: props.isActive,
-        [styles.errorSlot]: props.hasError, // Apply red border if there is an error
+        [styles.errorSlot]: props.hasError,
       })}
     >
       {props.char !== null && <div>{props.char}</div>}
@@ -82,69 +82,59 @@ const TwoSteps = () => {
   // States
   const [otp, setOtp] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [timer, setTimer] = useState(60); // Timer state for resend button
-  const [resendDisabled, setResendDisabled] = useState(true); // Manage resend button state
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [timer, setTimer] = useState(60);
+  const [resendDisabled, setResendDisabled] = useState(true);
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setError, // To set validation errors manually
-    clearErrors, // Clear errors when the OTP becomes valid
+    setError,
+    clearErrors,
   } = useForm<FormData>();
 
   useEffect(() => {
-    const tempEmail = sessionStorage.getItem("tempEmail");
-    if (!tempEmail) {
-      toast.error("No email found. Please login again.");
+    const tempPhoneNumber = sessionStorage.getItem("tempPhoneNumber");
+    if (!tempPhoneNumber) {
+      toast.error("No phone number found. Please login again.");
       router.push("/login");
     } else {
-      setEmail(tempEmail);
+      setPhoneNumber(tempPhoneNumber);
     }
 
     // Start the countdown when the user lands on the page
     const intervalId = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer > 0) return prevTimer - 1;
-        setResendDisabled(false); // Enable resend after 60 seconds
-        clearInterval(intervalId); // Stop the interval when the timer reaches 0
+        setResendDisabled(false);
+        clearInterval(intervalId);
         return 0;
       });
     }, 1000);
 
-    return () => clearInterval(intervalId); // Cleanup on unmount
+    return () => clearInterval(intervalId);
   }, [router]);
 
   const handleResend = () => {
-    setTimer(60); // Reset timer to 60 seconds
-    setResendDisabled(true); // Disable resend button
+    setTimer(60);
+    setResendDisabled(true);
     // Resend OTP logic goes here (you can call your resend OTP API)
     toast.success("OTP resent successfully");
 
     const intervalId = setInterval(() => {
       setTimer((prevTimer) => {
         if (prevTimer > 0) return prevTimer - 1;
-        setResendDisabled(false); // Enable resend after 60 seconds
-        clearInterval(intervalId); // Stop the interval when the timer reaches 0
+        setResendDisabled(false);
+        clearInterval(intervalId);
         return 0;
       });
     }, 1000);
   };
 
-  const maskEmail = (email: string) => {
-    const [localPart, domainPart] = email.split("@");
-    const maskedLocalPart =
-      localPart.length > 1
-        ? `${"*".repeat(localPart.length - 1)}${localPart[localPart.length - 1]}`
-        : "*";
-    return `${maskedLocalPart}@${domainPart}`;
-  };
-
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     if (!otp || otp.length < 6) {
-      // Manually set an error for OTP field if it's empty or incomplete
       setError("otp", {
         type: "manual",
         message: "Please enter a valid 6-digit code",
@@ -154,13 +144,13 @@ const TwoSteps = () => {
 
     setLoading(true);
     try {
-      const email = sessionStorage.getItem("tempEmail"); // Retrieve the email from sessionStorage
-      if (!email) {
-        throw new Error("Email not found. Please try logging in again.");
+      const phoneNumber = sessionStorage.getItem("tempPhoneNumber");
+      if (!phoneNumber) {
+        throw new Error("Phone number not found. Please try logging in again.");
       }
 
       const res = await signIn("credentials", {
-        email: email,
+        phoneNumber: phoneNumber,
         otp: otp,
         redirect: false,
       });
@@ -168,7 +158,7 @@ const TwoSteps = () => {
       if (res?.error) {
         toast.error(res.error);
       } else if (res?.ok) {
-        sessionStorage.removeItem("tempEmail"); // Clear the temporary email
+        sessionStorage.removeItem("tempPhoneNumber");
         toast.success("Login successful");
         router.push("/home");
       } else {
@@ -187,8 +177,13 @@ const TwoSteps = () => {
   const handleOtpChange = (value: string) => {
     setOtp(value);
     if (value.length === 6) {
-      clearErrors("otp"); // Clear error when a valid OTP is entered
+      clearErrors("otp");
     }
+  };
+
+  const maskPhoneNumber = (phoneNumber: string) => {
+    if (phoneNumber.length < 4) return phoneNumber; // If the phone number is too short, return as is
+    return `${phoneNumber.slice(0, 2)}** **${phoneNumber.slice(-2)}`;
   };
 
   return (
@@ -197,14 +192,15 @@ const TwoSteps = () => {
         <AuthIllustrationWrapper>
           <Card className="flex flex-col sm:is-[450px]">
             <CardContent className="sm:!p-12">
-              <Link href={"/"} className="flex justify-center mbe-6">
+              <div className="cursor-pointer flex justify-center mbe-6">
                 <Logo />
-              </Link>
+              </div>
               <div className="flex flex-col gap-1 mbe-6">
                 <Typography variant="h4">Two Step Verification 💬</Typography>
                 <Typography>
-                  We sent a verification code to your email. Enter the code
-                  from the {maskEmail(email)} in the field below.
+                  We sent a verification code to your phone number. Enter the
+                  code sent to {maskPhoneNumber(phoneNumber)} in the field
+                  below.{" "}
                 </Typography>
               </div>
               <form
@@ -232,8 +228,13 @@ const TwoSteps = () => {
                     <Typography color="error">{errors.otp.message}</Typography> // Show error message
                   )}
                 </div>
-                <Button fullWidth variant="contained" type="submit"  disabled={loading}>
-                {loading ? (
+                <Button
+                  fullWidth
+                  variant="contained"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? (
                     <>
                       <div className=" relative mr-2 my-auto">
                         <div className="flex justify-center items-center">
@@ -256,7 +257,6 @@ const TwoSteps = () => {
                   ) : (
                     "Verify OTP"
                   )}
-                  
                 </Button>
                 <div className="flex justify-center items-center flex-wrap gap-2">
                   <Typography>Didn&#39;t get the code?</Typography>
