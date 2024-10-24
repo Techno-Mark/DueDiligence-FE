@@ -180,7 +180,7 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
         ),
       }),
       columnHelper.accessor("role", {
-        header: "Role",
+        header: "Access Group",
         enableSorting: true,
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
@@ -275,7 +275,7 @@ const UserListTable = ({ tableData }: { tableData?: UsersType[] }) => {
             <DebouncedInput
               value={globalFilter ?? ""}
               onChange={(value) => setGlobalFilter(String(value))}
-              placeholder="Search Roles"
+              placeholder="Search User"
               className="max-sm:is-full"
             />
 

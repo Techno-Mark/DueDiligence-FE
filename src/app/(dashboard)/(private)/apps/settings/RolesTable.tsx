@@ -249,7 +249,7 @@ const RoleListTable = ({ tableData }: { tableData?: UsersType[] }) => {
             <DebouncedInput
               value={globalFilter ?? ""}
               onChange={(value) => setGlobalFilter(String(value))}
-              placeholder="Search Roles"
+              placeholder="Search Access Group"
               className="max-sm:is-full"
             />
 

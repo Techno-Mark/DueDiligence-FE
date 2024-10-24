@@ -189,8 +189,8 @@ const AddUserDrawer = ({ open, handleClose, userData, setData }: Props) => {
             fullWidth
             id="role"
             name="role"
-            label="Select Role*"
-            placeholder="Select Role"
+            label="Select Access Group*"
+            placeholder="Select Access Group"
             value={formik.values.role}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
